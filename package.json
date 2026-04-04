@@ -1,0 +1,30 @@
+{
+  "name": "policy-scoop-cli",
+  "version": "0.0.1",
+  "description": "cli tool kit to perform analysis of public policy in the U.S.",
+  "main": "pscoop.js",
+  "type": "module",
+  "bin": {
+    "pscoop": "bin/pscoop.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brienjl/policy-scoop-cli.git"
+  },
+  "keywords": [
+    "policy",
+    "usa",
+    "civictech",
+    "data",
+    "analysis"
+  ],
+  "author": "jeremy brien",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brienjl/policy-scoop-cli/issues"
+  },
+  "homepage": "https://github.com/brienjl/policy-scoop-cli#readme"
+}
