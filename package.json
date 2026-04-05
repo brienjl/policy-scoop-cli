@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/brienjl/policy-scoop-cli/issues"
   },
-  "homepage": "https://github.com/brienjl/policy-scoop-cli#readme"
+  "homepage": "https://github.com/brienjl/policy-scoop-cli#readme",
+  "dependencies": {
+    "commander": "14.0.3"
+  }
 }
