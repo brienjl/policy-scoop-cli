@@ -1,4 +1,4 @@
-import { textColor } from '../utils/helpers.js';
+import { textColor } from '../../utils/helpers.js';
 
 export async function getWhiteHouseEO(url) {
     const response = await fetch(url, {
