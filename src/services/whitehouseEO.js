@@ -1,3 +1,5 @@
+import { textColor } from '../utils/helpers.js';
+
 export async function getWhiteHouseEO(url) {
     const response = await fetch(url, {
         method: "GET",
@@ -9,7 +11,7 @@ export async function getWhiteHouseEO(url) {
     });
 
     if (!response.ok) {
-        console.error(`failed to fetch ${url}: ${response.status} ${response.statusText}`);
+        console.error(textColor('error', `failed to fetch ${url}: ${response.status}`));
     }
         const html = await response.text();
         const main = extractMainHtml(html);
@@ -24,19 +26,38 @@ export async function getWhiteHouseEO(url) {
 
 }
 
+//
+// Note 1.
+// MVP used axios and cheerio for fetching and destructuring a DOM-like object;
+// However, due to NPM/SBOM attacks over the last year, I'm opting to keep this project
+// as dependency-free as possible. If there's scaling opportunities, consider
+// adding axios/cheerio with as pinned dependencies and removing any auto-downloads 
+// in CI/CD processes (see architectural decision log)
+//
+
+//
+// Note 2.
+// These functions might be worth abstracting into it's own module for reuse if
+// we build more WhiteHouse.gov services and the page structure is consistent. 
+// For now, keep in the service as they're related and needed for destructuring
+// the page. 
+// 
 function extractMainHtml(html) {
     const match = html.match(/<main[\s\S]*?<\/main>/i);
+    console.log(textColor('info', `Extracting HTML from page...`))
     return match ? match[0] : html;
 }
 
 function extractTitle(html){
     const match = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+    console.log(textColor('info', `Extracting H1 as Title from page...`))
     if(!match) return null;
 
     return cleanText(stripTags(match[1]));
 }
 
 function extractParagraphs(html) {
+    console.log(textColor('info', `Mapping paragraph text and scrubbing...`))
     return [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
         .map(match => match[1])
         .map(stripTags)
