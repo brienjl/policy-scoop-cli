@@ -19,8 +19,6 @@ export async function getWhiteHouseEO(url) {
         const publishDate = extractPublishDate(html)
         const paragraphs = extractParagraphs(main);
 
-        console.log(`iso date is: ${publishDate.iso}`)
-        console.log(`display date is: ${publishDate.display}`)
 
         return { 
             url,
