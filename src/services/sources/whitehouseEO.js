@@ -1,4 +1,4 @@
-import { textColor } from '../utils/helpers.js';
+import { textColor } from '../../utils/helpers.js';
 
 export async function getWhiteHouseEO(url) {
     const response = await fetch(url, {
@@ -16,12 +16,17 @@ export async function getWhiteHouseEO(url) {
         const html = await response.text();
         const main = extractMainHtml(html);
         const title = extractTitle(html)
+        const publishDate = extractPublishDate(html)
         const paragraphs = extractParagraphs(main);
+
 
         return { 
             url,
             title,
-            text: paragraphs.join("\n\n")
+            text: paragraphs.join("\n\n"),
+            publish_date_iso: publishDate.iso,
+            publish_date_display: publishDate.display
+
         };
 
 }
@@ -48,13 +53,24 @@ function extractMainHtml(html) {
     return match ? match[0] : html;
 }
 
-function extractTitle(html){
+function extractTitle(html) {
     const match = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
     console.log(textColor('info', `Extracting H1 as Title from page...`))
     if(!match) return null;
 
     return cleanText(stripTags(match[1]));
 }
+
+function extractPublishDate(html) {
+    const match = html.match(/<time[^>]*datetime="([^"]+)"[^>]*>([\s\S]*?)<\/time>/i);
+    console.log(textColor('info', `Extracting publish date from page...`))
+    if (!match) return null;
+
+    return {
+        iso: match[1],
+        display: cleanText(stripTags(match[2]))
+    }
+};
 
 function extractParagraphs(html) {
     console.log(textColor('info', `Mapping paragraph text and scrubbing...`))
