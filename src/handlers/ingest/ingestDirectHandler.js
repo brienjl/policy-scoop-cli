@@ -15,19 +15,26 @@ export async function handleFetchDirect(url) {
 
         process.exit(0);
     } catch (error) {
-        console.error(textColor('error', `Failed to fetch: ${error.message}`))
+        console.error(textColor('error', `Failed to fetch and save to DB: ${error.message}`))
         process.exit(1)
     }
 }
 
 function whiteHouseEODataAdapter (object) {
+
+    //const eval_president = presidentLookup(signing_date);
+
     // data adapter for source data => db Schema
     const orderNumber = object.url.split('/').slice(-2).join('/');
     const title = object.title.trim();
     const url = object.url;
     const signing_date = object.publish_date_iso;
     const retrieved_date = Date.now();
-    const president = presidentLookup(signing_date);
+    
+    // lookup who the president is based on signing date
+    const evaluated_president = presidentLookup(signing_date);
+    const president = evaluated_president.last_name;
+    
     const original_text = object.text;
 
     return {
