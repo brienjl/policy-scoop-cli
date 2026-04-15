@@ -3,8 +3,7 @@ import { textColor } from '../../utils/helpers.js'
 import { presidentLookup } from '../../utils/president-lookup.js';
 import { saveEO } from '../../services/db/saveWhiteHouseEO.js';
 
-//todo update handler name to INGEST
-export async function handleFetchDirect(url) {
+export async function handleFetchEODirectFromWhiteHouse(url) {
     try {
         console.log(textColor('info', `Attempting to fetch from ${url}`))
         const data = await getWhiteHouseEO(url);
@@ -21,8 +20,6 @@ export async function handleFetchDirect(url) {
 }
 
 function whiteHouseEODataAdapter (object) {
-
-    //const eval_president = presidentLookup(signing_date);
 
     // data adapter for source data => db Schema
     const orderNumber = object.url.split('/').slice(-2).join('/');
