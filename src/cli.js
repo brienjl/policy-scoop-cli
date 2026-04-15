@@ -1,6 +1,6 @@
 import { Command } from "commander";
-import { handleFetchDirect } from './handlers/ingest/ingestDirectHandler.js'
-
+import { handleFetchEODirectFromWhiteHouse } from './handlers/ingest/ingestEODirectWhitehouseHandler.js'
+import { handleFetchEODirectFromFederalReg } from "./handlers/ingest/ingestEODirectFederalReg.js";
 const program = new Command();
 
 program
@@ -12,7 +12,14 @@ program
     .command('ingest-eo-whitehouse-url <url>')
     .description('ingest an eo from whitehouse url')
     .action(async(url) => {
-        await handleFetchDirect(url)
+        await handleFetchEODirectFromWhiteHouse(url)
+    });
+
+program
+    .command('ingest-eo-federalregister-url <url>')
+    .description('ingest an eo from federal register url')
+    .action(async(url) => {
+        await handleFetchEODirectFromFederalReg(url)
     });
 
 program.parse();

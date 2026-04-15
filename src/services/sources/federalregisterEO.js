@@ -1,7 +1,9 @@
 import { textColor } from '../../utils/helpers.js';
 
-export async function getWhiteHouseEO(url) {
-    const response = await fetch(url, {
+export async function getFederalRegEO(url) {
+
+        const parsedUrl = parseUrl(url);
+        const response = await fetch(parsedUrl, {
         method: "GET",
         headers: {
             "User-Agent": "Mozilla/5.0; Chrome/146.0.0.0 Safari/537.36",
@@ -11,45 +13,46 @@ export async function getWhiteHouseEO(url) {
     });
 
     if (!response.ok) {
-        console.error(textColor('error', `failed to fetch ${url}: ${response.status}`));
+        console.error(textColor('error', `failed to fetch: ${parsedUrl} ==> from: ${url} Response status: ${response.status}`))
     }
         const html = await response.text();
         const main = extractMainHtml(html);
-        const title = extractTitle(html)
-        const publishDate = extractPublishDate(html)
-        const paragraphs = extractParagraphs(main);
+        const title = extractTitle(main);
+        const paragraphs = extractParagraphs(main)
 
-        return { 
+        return {
             url,
             title,
-            text: paragraphs.join("\n\n"),
-            publish_date_iso: publishDate.iso,
-            publish_date_display: publishDate.display
-
+            text: paragraphs.join("\n\n")
         };
-}
+};
+
+// the returned url is the pre-rendered html page from the federal register and will load
+// less resources on our source and contains all the info we need to get the text and title
+function parseUrl(url) {
+    const match = url.match(
+        /^https?:\/\/www\.federalregister\.gov\/documents\/(\d{4})\/(\d{2})\/(\d{2})\/([^/]+)(?:\/.*)?$/i
+    );
+
+    if (!match) {
+        console.error(`Invalid federal reg EO url: ${url}`);
+    }
+
+    const [, year, month, day, documentNumber] = match;
+    return `https://www.federalregister.gov/documents/full_text/html/${year}/${month}/${day}/${documentNumber}`;
+};
 
 function extractMainHtml(html) {
     const match = html.match(/<main[\s\S]*?<\/main>/i);
-    console.log(textColor('info', `Extracting HTML from page...`))
     return match ? match[0] : html;
-}
+};
 
 function extractTitle(html) {
+
     const match = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
     if(!match) return null;
 
     return cleanText(stripTags(match[1]));
-}
-
-function extractPublishDate(html) {
-    const match = html.match(/<time[^>]*datetime="([^"]+)"[^>]*>([\s\S]*?)<\/time>/i);
-    if (!match) return null;
-
-    return {
-        iso: match[1],
-        display: cleanText(stripTags(match[2]))
-    }
 };
 
 function extractParagraphs(html) {
@@ -62,13 +65,13 @@ function extractParagraphs(html) {
 
 function stripTags(input) {
     return input.replace(/<[^>]+>/g, " ");
-}
+};
 
 function cleanText(input) {
     return decodeHtml(input)
         .replace(/\s+/g, " ")
         .trim();
-}
+};
 
 function decodeHtml(input) {
     return input
@@ -83,4 +86,4 @@ function decodeHtml(input) {
         .replace(/&#8221;/g, "”")
         .replace(/&#8211;/g, "–")
         .replace(/&#8212;/g, "—");
-}
+};
