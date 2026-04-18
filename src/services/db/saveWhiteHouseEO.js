@@ -1,7 +1,7 @@
 import connectDB from '../../db/connect.js';
 import ExecutiveOrder from '../../db/schemas/whitehouseEOSchema.js';
 
-export const saveEO = async (parsedData) => {
+export const saveWhiteHouseEO = async (parsedData) => {
     const { orderNumber, title, url, signing_date, retrieved_date, president, original_text } = parsedData;
     
     await connectDB();
