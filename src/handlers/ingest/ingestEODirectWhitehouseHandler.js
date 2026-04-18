@@ -1,7 +1,7 @@
 import { getWhiteHouseEO } from '../../services/sources/whitehouseEO.js'
 import { textColor } from '../../utils/helpers.js'
 import { presidentLookup } from '../../utils/president-lookup.js';
-import { saveEO } from '../../services/db/saveWhiteHouseEO.js';
+import { saveWhiteHouseEO } from '../../services/db/saveWhiteHouseEO.js';
 
 export async function handleFetchEODirectFromWhiteHouse(url) {
     try {
@@ -9,7 +9,7 @@ export async function handleFetchEODirectFromWhiteHouse(url) {
         const data = await getWhiteHouseEO(url);
         console.log(textColor('success', `Success! Fetched EO: ${data.title}`))
         
-        await saveEO(whiteHouseEODataAdapter(data))
+        await saveWhiteHouseEO(whiteHouseEODataAdapter(data))
         console.log(textColor('success', `Success! Saved EO to DB: ${data.title}`))
 
         process.exit(0);
