@@ -22,4 +22,7 @@ program
         await handleFetchEODirectFromFederalReg(url)
     });
 
+// program for bulk
+// ingest-bulk-eo-federalregister-csv <csv>
+
 program.parse();
