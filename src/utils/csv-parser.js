@@ -5,7 +5,8 @@ import { textColor } from './helpers.js';
 export async function csvParser(csvPath) {
 
     if (!fs.existsSync(csvPath)) {
-        throw new Error(textColor(`File not found: ${csvPath}`))
+        console.error(textColor('error', `File not found: ${csvPath}`))
+        throw new Error(`File not found: ${csvPath}`)
     }
 
     console.log(textColor('info', `Reading csv from ${csvPath}`))
