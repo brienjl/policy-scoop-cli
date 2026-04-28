@@ -43,8 +43,5 @@ export async function csvParser(csvPath) {
     Rows Succeeded: ${successfulReadsCount},
     Rows Skipped: ${errorReadsCount}`));
 
-    console.log(rows);
     return rows;
 };
-
-csvParser('/Users/jeremybrien/Documents/repo/policy-scoop-cli/documents_signed_from_01_20_2009_to_01_20_2017_signed_by_barack_obama_of_type_presidential_document_and_of_presidential_document_type_executive_order.csv');
