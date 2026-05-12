@@ -135,17 +135,61 @@ function cleanText(input) {
         .trim();
 }
 
-function decodeHtml(input) {
-    return input
-        .replace(/&nbsp;/g, " ")
-        .replace(/&amp;/g, "&")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&#8217;/g, "’")
-        .replace(/&#8220;/g, "“")
-        .replace(/&#8221;/g, "”")
-        .replace(/&#8211;/g, "–")
-        .replace(/&#8212;/g, "—");
+export function decodeHtml(input = "") {
+    if (typeof input !== "string") return "";
+
+    const namedEntities = {
+        nbsp: " ",
+        thinsp: " ",
+        ensp: " ",
+        emsp: " ",
+
+        amp: "&",
+        lt: "<",
+        gt: ">",
+        quot: '"',
+        apos: "'",
+
+        ldquo: "“",
+        rdquo: "”",
+        lsquo: "‘",
+        rsquo: "’",
+        sbquo: "‚",
+        bdquo: "„",
+
+        ndash: "–",
+        mdash: "—",
+
+        hellip: "…",
+        bull: "•",
+        middot: "·",
+        sect: "§",
+        para: "¶",
+
+        copy: "©",
+        reg: "®",
+        trade: "™",
+        deg: "°",
+        times: "×",
+        divide: "÷",
+
+        dollar: "$",
+        cent: "¢",
+        pound: "£",
+        euro: "€",
+        yen: "¥"
+    };
+
+return input
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, code) =>
+        String.fromCodePoint(parseInt(code, 16))
+    )
+    .replace(/&#(\d+);/g, (_, code) =>
+        String.fromCodePoint(Number(code))
+    )
+    .replace(/&([a-zA-Z]+);/g, (match, entity) =>
+        namedEntities[entity] ?? match
+    )
+    .replace(/[ \t]+/g, " ")
+    .trim();
 }

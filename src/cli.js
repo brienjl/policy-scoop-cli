@@ -1,6 +1,8 @@
 import { Command } from "commander";
 import { handleFetchEODirectFromWhiteHouse } from './handlers/ingest/ingestEODirectWhitehouseHandler.js'
 import { handleFetchEODirectFromFederalReg } from "./handlers/ingest/ingestEODirectFederalReg.js";
+import { handleFetchEOCsvFromFederalReg } from "./handlers/ingest/ingestEOCsvFederalReg.js";
+
 const program = new Command();
 
 program
@@ -21,5 +23,12 @@ program
     .action(async(url) => {
         await handleFetchEODirectFromFederalReg(url)
     });
+
+program
+    .command('ingest-eo-federalregister-csv <csv>')
+    .description('ingest eos from federal register from csv file')
+    .action(async(csv) => {
+        await handleFetchEOCsvFromFederalReg(csv)
+    })
 
 program.parse();
