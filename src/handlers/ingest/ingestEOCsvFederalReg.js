@@ -8,6 +8,10 @@ export async function handleFetchEOCsvFromFederalReg(csvPath){
     const csvRows = await csvParser(csvPath);
 
     for (const csvRow of csvRows) {
+
+        //TODO: re-implement as logging service
+        var successCount = 0;
+        var errorCount = 0;
         
         try {
             console.log(textColor('info', `Attempting to fetch from ${csvRow.url}`))
@@ -17,12 +21,15 @@ export async function handleFetchEOCsvFromFederalReg(csvPath){
             await saveFederalRegEO(federalRegEoCSVAdapter(csvRow, pageData));
             console.log(textColor('success', `Success! Saved EO to DB: ${csvRow.title}`))
 
+            successCount++;
+
         } catch (error) {
+            errorCount++;
             console.error(textColor('error', `Failed to fetch and save to DB ${error.message}`))
 
         }
-
     }
+    console.log(textColor('info', `Ingestion Complete. Success: ${successCount} | Errors: ${errorCount}`))
 }
 
 function federalRegEoCSVAdapter(csvObject, pageObject) { 
